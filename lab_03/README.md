@@ -141,3 +141,6 @@ SELECT
 FROM 
 	service_quality;
 ```
+Итоговое представление
+
+<img width="1532" height="401" alt="image" src="https://github.com/user-attachments/assets/31e56007-b3a3-4815-9bd6-80bd1db283ed" />
