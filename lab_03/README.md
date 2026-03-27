@@ -11,7 +11,7 @@
 
 Архитектура решения
 
-
+<img width="1037" height="994" alt="image" src="https://github.com/user-attachments/assets/a74db2f3-3731-401d-b6a8-37a84e5b8aeb" />
 
 Создание таблицы заказов
 ```SQL
