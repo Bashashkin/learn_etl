@@ -97,3 +97,47 @@ df.to_excel("reviews.xlsx", index=False)
 Подключение MySQL 
 
 <img width="897" height="613" alt="image" src="https://github.com/user-attachments/assets/92d3b60d-716f-4c9c-967a-8add64c5555c" />
+
+Создание витрины данных
+
+```SQL
+CREATE VIEW service_quality_report AS
+SELECT 
+    order_id,
+    customer_id,
+    order_date,
+    delivery_date,
+    status,
+    rating,
+    order_amount,
+    delivery_days,
+    delivery_hours,
+    CASE 
+        WHEN delivery_days = 0 THEN 'Доставка день-в-день'
+        WHEN delivery_days = 1 THEN 'Доставка на следующий день'
+        WHEN delivery_days BETWEEN 2 AND 3 THEN 'Быстрая доставка (2-3 дня)'
+        WHEN delivery_days BETWEEN 4 AND 5 THEN 'Обычная доставка (4-5 дней)'
+        WHEN delivery_days BETWEEN 6 AND 7 THEN 'Медленная доставка (6-7 дней)'
+        WHEN delivery_days >= 8 THEN 'Очень медленная доставка (8+ дней)'
+        ELSE 'Нет данных'
+    END AS delivery_speed_category,
+    CASE 
+        WHEN rating = 5 THEN 'Идеально'
+        WHEN rating = 4 THEN 'Хорошо'
+        WHEN rating = 3 THEN 'Нормально'
+        WHEN rating = 2 THEN 'Плохо'
+        WHEN rating = 1 THEN 'Очень плохо'
+        ELSE 'Нет оценки'
+    END AS rating_category,
+    -- Соответствие времени доставки и оценки
+    CASE 
+        WHEN delivery_days <= 3 AND rating >= 4 THEN 'Отличный сервис - быстрая доставка с высокой оценкой'
+        WHEN delivery_days <= 3 AND rating <= 3 THEN 'Быстрая доставка, но низкая оценка - проверить качество'
+        WHEN delivery_days >= 4 AND rating >= 4 THEN 'Хорошая оценка несмотря на медленную доставку'
+        WHEN delivery_days >= 4 AND rating <= 3 THEN 'Плохой сервис - медленная доставка с низкой оценкой'
+        WHEN delivery_days = 0 AND rating = 5 THEN 'Идеально - доставка день в день и высокая оценка'
+        ELSE 'Смешанная оценка качества сервиса'
+    END AS service_quality_assessment
+FROM 
+	service_quality;
+```
