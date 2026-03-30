@@ -11,6 +11,33 @@
 
 ## Ход работы
 
+Структура датасета
+
+- transaction_id - уникальный идентификатор транзакции
+- price - стоимость объекта недвижимости
+- date - дата совершения сделки
+- postcode - почтовый индекс
+- property_type - тип недвижимости
+- new_build_flag - признак новостройки (Y/N)
+- tenure_type - тип владения (freehold / leasehold)
+- primary_addressable_object_name - основной номер объекта
+- secondary_addressable_object_name - дополнительный номер (если есть)
+- street - улица
+- locality - локальная область
+- town_city - город
+- district - район
+- county - округ
+- ppd_category_type - категория сделки
+- record_status - статус записи
+
+Поле property_type принимает следующие значения:
+
+- D - отдельно стоящий дом (Detached)
+- S - дом на две семьи (Semi-Detached)
+- T - таунхаус (Terraced)
+- F - квартира (Flat)
+- O - другой тип недвижимости
+
 ### Извелечение данных
 ```python
 import dask.dataframe as dd
@@ -101,6 +128,16 @@ df["price"].astype(float).mean().visualize(filename="mean_dag")
 ```
 <img width="573" height="443" alt="mean_dag" src="https://github.com/user-attachments/assets/4706431f-6be3-48c9-b478-6f13b96b2543" />
 
+### Визуализация данных
 
+<img width="649" height="377" alt="visualization" src="https://github.com/user-attachments/assets/a268034c-17ce-46d1-9b18-83239b8be238" />
 
+<img width="435" height="242" alt="123" src="https://github.com/user-attachments/assets/dcc8fcac-ec56-4fa5-b774-b86a3c4a352b" />
 
+<img width="411" height="259" alt="city_with_most_sales" src="https://github.com/user-attachments/assets/6cbefe7f-0135-4621-b7ed-f828cdb87c4c" />
+
+<img width="298" height="362" alt="propety_type_price_distribution" src="https://github.com/user-attachments/assets/8a0088ce-a83d-496c-a5a6-63d3cf1f1c82" />
+
+## Вывод
+
+В ходе выполнения лабораторной работы был реализован процесс анализа большого набора данных о сделках с недвижимостью в Великобритании с использованием библиотеки Dask. Также была изучена концепция направленных ациклических графов. Для визуалиазии данных была использована библиотека Altair
