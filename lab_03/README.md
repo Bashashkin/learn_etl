@@ -105,42 +105,34 @@ CREATE VIEW service_quality_report AS
 SELECT 
     order_id,
     customer_id,
-    order_date,
-    delivery_date,
-    status,
     rating,
-    order_amount,
-    delivery_days,
-    delivery_hours,
-    CASE 
-        WHEN delivery_days = 0 THEN 'Доставка день-в-день'
-        WHEN delivery_days = 1 THEN 'Доставка на следующий день'
-        WHEN delivery_days BETWEEN 2 AND 3 THEN 'Быстрая доставка (2-3 дня)'
-        WHEN delivery_days BETWEEN 4 AND 5 THEN 'Обычная доставка (4-5 дней)'
-        WHEN delivery_days BETWEEN 6 AND 7 THEN 'Медленная доставка (6-7 дней)'
-        WHEN delivery_days >= 8 THEN 'Очень медленная доставка (8+ дней)'
-        ELSE 'Нет данных'
-    END AS delivery_speed_category,
-    CASE 
-        WHEN rating = 5 THEN 'Идеально'
-        WHEN rating = 4 THEN 'Хорошо'
-        WHEN rating = 3 THEN 'Нормально'
-        WHEN rating = 2 THEN 'Плохо'
-        WHEN rating = 1 THEN 'Очень плохо'
-        ELSE 'Нет оценки'
-    END AS rating_category,
-    -- Соответствие времени доставки и оценки
-    CASE 
-        WHEN delivery_days <= 3 AND rating >= 4 THEN 'Отличный сервис - быстрая доставка с высокой оценкой'
-        WHEN delivery_days <= 3 AND rating <= 3 THEN 'Быстрая доставка, но низкая оценка - проверить качество'
-        WHEN delivery_days >= 4 AND rating >= 4 THEN 'Хорошая оценка несмотря на медленную доставку'
-        WHEN delivery_days >= 4 AND rating <= 3 THEN 'Плохой сервис - медленная доставка с низкой оценкой'
-        WHEN delivery_days = 0 AND rating = 5 THEN 'Идеально - доставка день в день и высокая оценка'
-        ELSE 'Смешанная оценка качества сервиса'
-    END AS service_quality_assessment
-FROM 
-	service_quality;
+    TIMESTAMPDIFF(MINUTE, order_date, delivery_date) AS delivery_minutes
+FROM service_quality
+WHERE rating IS NOT NULL;
 ```
 Итоговое представление
 
-<img width="1532" height="401" alt="image" src="https://github.com/user-attachments/assets/31e56007-b3a3-4815-9bd6-80bd1db283ed" />
+<img width="398" height="210" alt="image" src="https://github.com/user-attachments/assets/fed24ea4-1d80-49a8-aa9b-765c6afa5314" />
+
+Корреляция между временем и оценки доставки 
+```python
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LinearRegression
+
+X = df[['delivery_minutes']]
+y = df['rating']
+
+X_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)
+
+model = LinearRegression()
+model.fit(X_train, y_train)
+
+print("R2:", model.score(X_test, y_test))
+```
+Результат:
+R2: -0.001946379607057347
+
+Время доставки не влияет на рейтинг, может быть из-за того, что данные были сгенерированы.
+
+<img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/8f3b0a60-913d-44b4-b595-83ae2c83d49f" />
+
