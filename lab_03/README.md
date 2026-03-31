@@ -136,3 +136,4 @@ R2: -0.001946379607057347
 
 <img width="567" height="455" alt="image" src="https://github.com/user-attachments/assets/8f3b0a60-913d-44b4-b595-83ae2c83d49f" />
 
+[Анализ доставок в ipynb](https://github.com/Bashashkin/learn_etl/blob/main/lab_03/lab3_etl.ipynb)
